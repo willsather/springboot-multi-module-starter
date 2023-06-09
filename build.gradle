@@ -1,0 +1,60 @@
+plugins {
+    id 'java'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'maven-publish'
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'maven-publish'
+    apply plugin: 'java-library'
+
+    group = mavenGroup
+    version = '1.0.0-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencyManagement {
+
+        imports {
+            mavenBom 'org.springframework.boot:spring-boot-dependencies:3.0.4'
+            mavenBom 'org.springframework.cloud:spring-cloud-dependencies:2022.0.2'
+            mavenBom 'org.springframework.security:spring-security-bom:6.0.2'
+            mavenBom 'org.mockito:mockito-bom:5.3.0'
+        }
+    }
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok:1.18.26'
+        annotationProcessor 'org.projectlombok:lombok:1.18.26'
+
+        testCompileOnly 'org.projectlombok:lombok:1.18.26'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
+
+        testImplementation 'org.junit.jupiter:junit-jupiter-api'
+        testImplementation 'org.junit.jupiter:junit-jupiter-engine'
+        testImplementation 'org.assertj:assertj-core'
+        testImplementation 'org.mockito:mockito-core:5.3.0'
+        testImplementation 'org.awaitility:awaitility:4.2.0'
+    }
+
+    test {
+        useJUnitPlatform() {
+            excludeTags 'integration'
+        }
+    }
+
+    task integrationTest(type: Test) {
+        useJUnitPlatform() {
+            includeTags 'integration'
+        }
+    }
+}
